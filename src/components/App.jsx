@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import toast, { Toaster } from 'react-hot-toast';
 
 import { Filter } from './Filter/Filter';
 import { ContactsList } from './Contacts.list/ContactsList';
@@ -35,12 +36,13 @@ function App() {
     };
 
     if (checkContactName(contact.name)) {
-      alert(`${contact.name} is already in contacts`);
+      toast.error(`${contact.name} is already in contacts`);
 
       return contact.name;
     }
 
     setContacts([contact, ...contacts]);
+    toast.success('You have added a new contact');
   };
 
   const checkContactName = newName => {
@@ -48,18 +50,28 @@ function App() {
   };
 
   const changeFilter = evt => {
-    setFilter(evt.target.value);
+    setFilter(evt.currentTarget.value);
   };
 
   const deleteContact = contactId => {
     setFilter(contacts.filter(contact => contact.id !== contactId));
+    toast('The contact has been deleted ', {
+      icon: '👏',
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
   };
 
-  const normalizedFilter = filter.toLowerCase();
+  function visibleContacts() {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
 
-  const visibleContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(normalizedFilter)
-  );
+  const filteredVisivleContacts = visibleContacts();
 
   return (
     <>
@@ -69,9 +81,10 @@ function App() {
       <Section title="Contacts">
         <Filter value={filter} onChangeFilter={changeFilter} />
         <ContactsList
-          contacts={visibleContacts}
+          contacts={filteredVisivleContacts}
           onDeleteContact={deleteContact}
         />
+        <Toaster />
       </Section>
     </>
   );

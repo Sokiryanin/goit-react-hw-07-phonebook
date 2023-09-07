@@ -6,9 +6,7 @@ export const Filter = ({ onChangeFilter, value }) => {
       <InputFilter
         type="text"
         value={value}
-        onChange={evt => {
-          onChangeFilter(evt.target.value);
-        }}
+        onChange={onChangeFilter}
         placeholder="Contacts filter"
       />
     </div>
