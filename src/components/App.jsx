@@ -5,7 +5,7 @@ import { Filter } from './Filter/Filter';
 import { ContactsList } from './Contacts.list/ContactsList';
 import { Section } from './Seaction/Section';
 import { ContactsForm } from './Form/ContactsForm';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // базові значення  массиву контактів виносимо в окрему змінну
 
@@ -54,7 +54,8 @@ function App() {
   };
 
   const deleteContact = contactId => {
-    setFilter(contacts.filter(contact => contact.id !== contactId));
+    setContacts(contacts.filter(contact => contact.id !== contactId));
+
     toast('The contact has been deleted ', {
       icon: '👏',
       style: {
@@ -65,13 +66,26 @@ function App() {
     });
   };
 
-  function visibleContacts() {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }
+  //  const filteredPlanets = useMemo(
+  //    () => planets.filter(planet => planet.includes(query)),
+  //    [planets, query]
+  //  );
 
-  const filteredVisivleContacts = visibleContacts();
+  // function visibleContacts() {
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(filter.toLowerCase())
+  //   );
+  // }
+
+  const visibleContacts = useMemo(
+    () =>
+      contacts.filter(contact =>
+        contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
+      ),
+    [contacts, filter]
+  );
+
+  // const filteredVisivleContacts = visibleContacts();
 
   return (
     <>
@@ -81,7 +95,7 @@ function App() {
       <Section title="Contacts">
         <Filter value={filter} onChangeFilter={changeFilter} />
         <ContactsList
-          contacts={filteredVisivleContacts}
+          contacts={visibleContacts}
           onDeleteContact={deleteContact}
         />
         <Toaster />
