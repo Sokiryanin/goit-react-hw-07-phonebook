@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 const validSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too short name!').required('Required!'),
-  number: Yup.number().min(5, 'Add actual phone number!'),
+  // number: Yup.number().min(5 'Add actual phone number!'),
 });
 
 export const ContactsForm = ({ onSubmit }) => {
