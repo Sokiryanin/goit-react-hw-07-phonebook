@@ -1,19 +1,39 @@
+import toast, { Toaster } from 'react-hot-toast';
 import { Label, Button, StyledForm } from './Form.styled';
 import { Formik, Field } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 import * as Yup from 'yup';
 
 const validSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too short name!').required('Required!'),
-  // number: Yup.number().min(5 'Add actual phone number!'),
 });
 
-export const ContactsForm = ({ onSubmit }) => {
+export const ContactsForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const checkedContact = contact => {
+    return contacts.some(
+      element => element.name.toLowerCase() === contact.name.toLowerCase()
+    );
+  };
+
+  const newContact = contact => {
+    if (checkedContact(contact)) {
+      toast.error(`${contact.name} already in contacts`);
+    } else {
+      dispatch(addContact(contact));
+    }
+  };
+
   return (
     <Formik
       initialValues={{ name: '', number: '' }}
       validationSchema={validSchema}
       onSubmit={(values, actions) => {
-        onSubmit(values);
+        newContact(values);
         actions.resetForm();
       }}
     >
@@ -28,6 +48,7 @@ export const ContactsForm = ({ onSubmit }) => {
         </Label>
 
         <Button type="submit">Add contact</Button>
+        <Toaster />
       </StyledForm>
     </Formik>
   );
