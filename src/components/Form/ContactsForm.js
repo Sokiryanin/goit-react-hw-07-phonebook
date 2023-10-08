@@ -2,16 +2,17 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Label, Button, StyledForm } from './Form.styled';
 import { Formik, Field } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
+
+import { selectContacts } from 'redux/selectors';
 import * as Yup from 'yup';
+import { addContact } from 'redux/operations';
 
 const validSchema = Yup.object().shape({
   name: Yup.string().min(2, 'Too short name!').required('Required!'),
 });
 
 export const ContactsForm = () => {
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
   const checkedContact = contact => {
