@@ -15,8 +15,7 @@ export const ContactsList = () => {
           <p>{number}</p>
           <DeleteButton
             type="button"
-            onClick={() => dispatch(deleteContact(id))}
-          >
+            onClick={() => dispatch(deleteContact(id))}>
             Delete contact
           </DeleteButton>
         </li>
